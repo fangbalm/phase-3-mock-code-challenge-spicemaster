@@ -44,8 +44,9 @@ function addSpiceToPage(spice){
     <h2 class="title">${spice.title}</h2>
     <div class="ingredients-container">
     <h4>Ingredients:</h4>
-    <ul class="ingredients-list"></ul>
-    <li>Test</li>
+    <ul class="ingredients-list">
+          <!-- Add Spice Blend Ingredients Here -->
+        </ul>
   </div>`
 }
 
@@ -61,11 +62,29 @@ function getSpiceIngredients(ingredientArray){
 
 // Ingredients Not updating. Originally, ingredient names overlapped each other
 function addIngredientsToPage(ingredient){
+    // const unorderedList = document.createElement('ul')
+    // unorderedList.className = 'ingredients-list'
     const ingredientName = ingredient.name 
-   ingredientsList.innerHTML = `<li> ${ingredient.name} </li>`
-   console.log(div)
-   ingredientsContainer.append(div)
+    spiceDetails.innerHTML += `<li> ${ingredientName} </li>` //When added to ingredientsList, it doesn't populate on the page(?) 
+
+//    list = ingredientsList.innerHTML = `<li> ${ingredient.name} </li>`
+   
 }
+
+//FINISHED FIRST DELIVERABLE, THOUGH INGREDIENTS POPULATE IN THE WRONG PLACE 
+
 // STEP 5 == UPDATE TITLE OF SPICE BLEND ON THE PAGE WHEN UPDATE-FORM IS SUBMITTED (persists)
 
+// function grabFormData(event){
 
+//     }
+
+// function updateSpiceBlend(id){
+//     fetch(`http://localhost:3000/spiceblends/${id}`, {
+//         method: 'PATCH', 
+//         headers: {
+//             'Content-Type': 'application/json'
+//         }, 
+//         body: JSON.stringify
+//     })
+// }
