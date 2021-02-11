@@ -1,90 +1,76 @@
 
 // STEP 1 == GRAB ELEMENTS OFF THE DOM 
-const spiceImage = document.querySelector('.detail-image')
-const ingredientsContainer = document.querySelector('.ingredients-container')
-const spiceTitle = document.querySelector('.title')
 const spiceDetails = document.querySelector('#spice-blend-detail')
+const spiceImage = document.querySelector('.detail-image')
+const titleH2 = document.querySelector('.title')  
+const ingredientsUl = document.querySelector('ul')
 const updateSpiceForm = document.querySelector('#update-form')
 const newIngredientForm = document.querySelector('#ingredient-form')
-const ingredientsList = document.querySelector('.ingredients-list')
 
-// STEP 2 == WHEN PAGE LOADS, CREATE GET FETCH REQUEST TO RETRIEVE ALL THE DATA
-function getAllSpices() {
-    fetch(`http://localhost:3000/spiceblends`)
+// STEP 2 == WHEN THE PAGE LOADS, CREATE (GET) FETCH REQUEST TO RETRIEVE THE FIRST SPICE
+function getFirstSpice() {
+    fetch(`http://localhost:3000/spiceblends/1`)
     .then(res => res.json())
-    .then(getOneSpice)
+    .then(addFirstSpiceToPage)
 }
 // Invoking Function 
-getAllSpices()
+getFirstSpice()
 
-// STEP 3 == GET SINGLE SPICE FROM ARRAY OF SPICES DATA
-function getOneSpice(spiceArray){
-    // console.log(spiceArray)
-    spiceArray.forEach(spice => {
-        if(spice.id === 1){
-            addSpiceToPage(spice)
-        }
+
+// STEP 3 == ADD THE FIRST SPICE TO THE PAGE 
+function addFirstSpiceToPage(spice){
+    spiceImage.src = spice.image
+    spiceImage.alt = spice.title
+    titleH2.textContent = spice.title
+
+    addIngredientsToPage(spice)
+
+}
+
+// STEP 4 == ADD INGREDIENTS TO PAGE 
+function addIngredientsToPage(spice){
+    spice.ingredients.forEach(ingredient => {
+        const li = document.createElement('li')
+        li.textContent = ingredient.name 
+        ingredientsUl.append(li)
     })
 }
 
-// STEP 4 == CREATE FETCH REQUEST TO RETRIEVE ALL INGREDIENTS 
-function getAllIngredients() {
-    fetch(`http://localhost:3000/ingredients`)
-    .then(res => res.json())
-    .then(getSpiceIngredients)
-}
-//Invoking Function 
-getAllIngredients()
+// STEP 5 == UPDATE THE TITLE OF THE SPICE BLEND WHEN THE UPDATE FORM IS SUBMITTED 
+updateSpiceForm.addEventListener('submit', event => {
+    event.preventDefault()
+    const titleInput = event.target.title.value
+   fetch('http://localhost:3000/spiceblends/1', {
+    method: 'PATCH', 
+    headers: {
+        'Content-Type': 'application/json'
+    }, 
+    body: JSON.stringify({title: titleInput})
+})
+    .then(response => response.json())
+    .then(updatedSpiceName => {
+     titleH2.textContent = updatedSpiceName.title 
+})
+})
 
-// STEP 6 == CREATE FUNCTION TO ADD FIRST SPICE TO PAGE 
-// * realized, must first get ingredient data 
-function addSpiceToPage(spice){
-    spiceDetails.innerHTML = `
-    <img class="detail-image" src="${spice.image}" alt="${spice.title}" />
-    <h2 class="title">${spice.title}</h2>
-    <div class="ingredients-container">
-    <h4>Ingredients:</h4>
-    <ul class="ingredients-list">
-          <!-- Add Spice Blend Ingredients Here -->
-        </ul>
-  </div>`
-}
 
-// STEP 7 == CREATE FUNCTION TO PARSE THROUGH INGREDIENT ARRAY AND ASSOCIATE IT WITH
-// A SPICE
-function getSpiceIngredients(ingredientArray){
-    ingredientArray.forEach(ingredient => {
-        if (ingredient.spiceblendId === 1){
-            addIngredientsToPage(ingredient)
-        }
-    })
-}
+// STEP 6 == UPDATE THE INGREDIENTS IN THE SPICE BLEND WHEN THE UPDATE FORM IS SUBMITTED (NO PERSISTENCE REQUIRED)
+newIngredientForm.addEventListener('submit', event => {
+    event.preventDefault()
+    const ingredientInput = event.target.name.value
+    const li = document.createElement('li')
+    li.textContent = ingredientInput
+    ingredientsUl.append(li)
 
-// Ingredients Not updating. Originally, ingredient names overlapped each other
-function addIngredientsToPage(ingredient){
-    // const unorderedList = document.createElement('ul')
-    // unorderedList.className = 'ingredients-list'
-    const ingredientName = ingredient.name 
-    spiceDetails.innerHTML += `<li> ${ingredientName} </li>` //When added to ingredientsList, it doesn't populate on the page(?) 
-
-//    list = ingredientsList.innerHTML = `<li> ${ingredient.name} </li>`
-   
-}
-
-//FINISHED FIRST DELIVERABLE, THOUGH INGREDIENTS POPULATE IN THE WRONG PLACE 
-
-// STEP 5 == UPDATE TITLE OF SPICE BLEND ON THE PAGE WHEN UPDATE-FORM IS SUBMITTED (persists)
-
-// function grabFormData(event){
-
-//     }
-
-// function updateSpiceBlend(id){
-//     fetch(`http://localhost:3000/spiceblends/${id}`, {
-//         method: 'PATCH', 
-//         headers: {
-//             'Content-Type': 'application/json'
-//         }, 
-//         body: JSON.stringify
-//     })
-// }
+   fetch('http://localhost:3000/spiceblends/1', {
+    method: 'PATCH', 
+    headers: {
+        'Content-Type': 'application/json'
+    }, 
+    body: JSON.stringify({name: ingredientInput, spiceblendId: 1})
+})
+    .then(response => response.json())
+    .then(updatedIngredient => {
+     console.log(updatedIngredient)
+})
+})

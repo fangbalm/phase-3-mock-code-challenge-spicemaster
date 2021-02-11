@@ -3,7 +3,9 @@
     {
       "id": 1,
       "title": "Pumpkin Spice",
-      "image": "./assets/spices/pumpkinspicelatte.jpg"
+      "image": "./assets/spices/pumpkinspicelatte.jpg",
+      "name": "Salt",
+      "spiceblendId": 1
     },
     {
       "id": 2,
